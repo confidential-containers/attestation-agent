@@ -1,0 +1,26 @@
+[package]
+name = "sample_kbs"
+version = "0.0.1"
+authors = ["Jiale Zhang <zhangjiale@linux.alibaba.com>"]
+publish = false
+edition = "2018"
+
+[lib]
+name = "lib"
+path = "src/lib/lib.rs"
+
+[[bin]]
+name = "sample_kbs"
+path = "src/sample_kbs.rs"
+
+[dependencies]
+futures = "0.3.5"
+grpcio = "0.6.0"
+protobuf = "~2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+aes-gcm = "0.9.2"
+base64 = "0.13.0"
+
+[build-dependencies]
+protoc-grpcio = "3.0.0"
