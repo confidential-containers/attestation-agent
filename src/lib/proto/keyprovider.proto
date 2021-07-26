@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package keyprovider;
+
+message keyProviderKeyWrapProtocolInput {
+    bytes KeyProviderKeyWrapProtocolInput = 1;
+}
+
+message keyProviderKeyWrapProtocolOutput {
+    bytes KeyProviderKeyWrapProtocolOutput = 1;
+}
+
+service KeyProviderService {
+    rpc UnWrapKey(keyProviderKeyWrapProtocolInput) returns (keyProviderKeyWrapProtocolOutput) {};
+}
