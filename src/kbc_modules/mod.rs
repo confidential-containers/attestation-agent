@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+use serde::{Deserialize, Serialize};
+
 // Add your specific kbc declaration here.
 // For example: "pub mod sample_kbc;"
 #[allow(dead_code)]
@@ -18,17 +20,22 @@ pub mod offline_fs_kbc;
 #[cfg(feature = "offline_sev_kbc")]
 pub mod offline_sev_kbc;
 
+#[cfg(feature = "online_sev_kbc")]
+pub mod online_sev_kbc;
+
 #[cfg(feature = "sample_kbc")]
 pub mod sample_kbc;
 
 use anyhow::*;
+use async_trait::async_trait;
 use std::collections::HashMap;
 
 // KbcInterface is a standard interface that all KBC modules need to implement.
-pub trait KbcInterface {
+#[async_trait]
+pub trait KbcInterface: Send {
     fn check(&self) -> Result<KbcCheckInfo>;
-    fn decrypt_payload(&mut self, annotation: &str) -> Result<Vec<u8>>;
-    fn get_resource(&mut self, _description: String) -> Result<Vec<u8>> {
+    async fn decrypt_payload(&mut self, annotation: &str) -> Result<Vec<u8>>;
+    async fn get_resource(&mut self, _description: String) -> Result<Vec<u8>> {
         Err(anyhow!("Get Resource API of this KBC is unimplement!"))
     }
 }
@@ -89,14 +96,41 @@ impl KbcModuleList {
             mod_list.insert("offline_sev_kbc".to_string(), instantiate_func);
         }
 
+        #[cfg(feature = "online_sev_kbc")]
+        {
+            let instantiate_func: KbcInstantiateFunc = Box::new(|kbs_uri: String| -> KbcInstance {
+                Box::new(online_sev_kbc::OnlineSevKbc::new(kbs_uri))
+            });
+            mod_list.insert("online_sev_kbc".to_string(), instantiate_func);
+        }
+
         KbcModuleList { mod_list }
     }
 
     pub fn get_func(&self, kbc_name: &str) -> Result<&KbcInstantiateFunc> {
-        let instantiate_func: &KbcInstantiateFunc = self
-            .mod_list
-            .get(kbc_name)
-            .ok_or_else(|| anyhow!("AA does not support the given KBC module!"))?;
+        let instantiate_func: &KbcInstantiateFunc =
+            self.mod_list.get(kbc_name).ok_or_else(|| {
+                anyhow!(
+                    "AA does not support the given KBC module! Module: {}",
+                    kbc_name
+                )
+            })?;
         Ok(instantiate_func)
     }
+}
+
+#[derive(EnumString, Display, Debug, PartialEq)]
+pub enum ResourceName {
+    #[strum(serialize = "Policy")]
+    Policy,
+    #[strum(serialize = "Sigstore Config")]
+    SigstoreConfig,
+    #[strum(serialize = "GPG Keyring")]
+    GPGPublicKey,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ResourceDescription {
+    name: String,
+    optional: HashMap<String, String>,
 }

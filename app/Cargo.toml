@@ -19,10 +19,11 @@ log = "0.4.14"
 env_logger = "0.9.0"
 lazy_static = "1.4.0"
 attestation_agent = { path = "../", default-features = false }
+async-trait = "0.1.56"
 
 [build-dependencies]
 tonic-build = "0.7.2"
-shadow-rs = "0.5.25"
+shadow-rs = "0.16.1"
 
 [features]
 default = ["sample_kbc"]
@@ -31,3 +32,4 @@ cc_kbc = ["attestation_agent/cc_kbc"]
 eaa_kbc = ["attestation_agent/eaa_kbc"]
 offline_fs_kbc = ["attestation_agent/offline_fs_kbc"]
 offline_sev_kbc = ["attestation_agent/offline_sev_kbc"]
+online_sev_kbc = ["attestation_agent/online_sev_kbc"]

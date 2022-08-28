@@ -23,7 +23,7 @@ openssl = { version = "0.10", optional = true }
 
 [build-dependencies]
 tonic-build = "0.5"
-shadow-rs = "0.5.25"
+shadow-rs = "0.16.1"
 
 [features]
 default = []
