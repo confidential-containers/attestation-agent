@@ -66,12 +66,18 @@ attestation-agent --help
 Start AA and specify the endpoint of AA's gRPC service:
 
 ```shell
-attestation-agent --keyprovider_sock 127.0.0.1:47777 --getresource_sock 127.0.0.1:48888
+attestation-agent --keyprovider_sock 127.0.0.1:50000 --getresource_sock 127.0.0.1:50001
+```
+
+Or start AA with default keyprovider address (127.0.0.1:50000) and default getresource address (127.0.0.1:50001):
+
+```
+attestation-agent
 ```
 
 If you want to see the runtime log:
 ```
-RUST_LOG=attestation_agent attestation-agent --keyprovider_sock 127.0.0.1:47777 --getresource_sock 127.0.0.1:48888
+RUST_LOG=attestation_agent attestation-agent --keyprovider_sock 127.0.0.1:50000 --getresource_sock 127.0.0.1:50001
 ```
 
 ## Supported KBC modules
@@ -86,6 +92,7 @@ List of supported KBC modules:
 | offline_fs_kbc     | [Offline file system KBC](src/kbc_modules/offline_fs_kbc/README.md) | Null         | IBM                       |
 | eaa_kbc            | [EAA KBC](src/kbc_modules/eaa_kbc/README.md)                        | EAA protocol | Alibaba Cloud             |
 | offline_sev_kbc    | [Offline SEV KBC](src/kbc_modules/offline_sev_kbc/README.md)        | Null         | IBM                       |
+| online_sev_kbc     | [Online SEV KBC](src/kbc_modules/online_sev_kbc/README.md)          | simple-kbs   | IBM                       |
 
 
 ## Tools
