@@ -69,11 +69,15 @@ impl DerefMut for RatsTls {
 
 impl RatsTls {
     pub fn new() -> Result<RatsTls, RatsTlsErrT> {
+        let verifier_str: String = "nullverifier".to_string();
+        let mut verifier_array: [u8; 32] = [0; 32];
+        verifier_array[..verifier_str.len()].copy_from_slice(verifier_str.as_bytes());
         let mut conf = rats_tls_conf_t {
             api_version: RATS_TLS_API_VERSION_DEFAULT,
             log_level: RATS_TLS_LOG_LEVEL_DEBUG,
             cert_algo: RATS_TLS_CERT_ALGO_DEFAULT,
             enclave_id: 0,
+            verifier_type: verifier_array,
             ..Default::default()
         };
         conf.flags |= RATS_TLS_CONF_FLAGS_MUTUAL;
