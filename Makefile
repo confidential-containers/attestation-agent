@@ -32,6 +32,11 @@ ifeq ($(LIBC), musl)
     endif
 endif
 
+ifneq (,$(filter $(ARCH),ppc64le ppc64el))
+    ARCH=powerpc64le
+    SOURCE_ARCH=powerpc64le
+endif
+
 ifneq ($(SOURCE_ARCH), $(ARCH))
     ifneq ($(DEBIANOS),)
         GCC_COMPILER_PACKAGE_FOR_TARGET_ARCH := gcc-$(ARCH)-linux-$(LIBC)
