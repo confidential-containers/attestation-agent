@@ -32,7 +32,11 @@ ifeq ($(LIBC), musl)
     endif
 endif
 
-ifneq (,$(filter $(ARCH),ppc64le ppc64el))
+ifeq ($(ARCH),ppc64le)
+    ARCH=powerpc64le
+    SOURCE_ARCH=powerpc64le
+endif
+ifeq ($(ARCH),ppc64el)
     ARCH=powerpc64le
     SOURCE_ARCH=powerpc64le
 endif
