@@ -122,7 +122,7 @@ pub fn hash_chunks(chunks: Vec<Vec<u8>>) -> String {
     let mut hasher = Sha384::new();
 
     for chunk in chunks.iter() {
-        hasher.update(&chunk);
+        hasher.update(chunk);
     }
 
     let res = hasher.finalize();
