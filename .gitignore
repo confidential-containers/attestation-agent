@@ -4,3 +4,6 @@
 # Added by cargo
 
 /target
+
+# Rust Cargo
+Cargo.lock

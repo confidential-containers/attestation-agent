@@ -7,6 +7,8 @@ use super::Attester;
 use anyhow::*;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
+
+#[cfg(feature = "tdx")]
 use tdx_attest_rs;
 
 const CCEL_PATH: &str = "/sys/firmware/acpi/tables/CCEL";
@@ -28,6 +30,12 @@ struct TdxEvidence {
 pub struct TdxAttester {}
 
 impl Attester for TdxAttester {
+    #[cfg(not(feature = "tdx"))]
+    fn get_evidence(&self, _report_data: String) -> Result<String> {
+        bail!("Tdx attester module uncompiled!")
+    }
+
+    #[cfg(feature = "tdx")]
     fn get_evidence(&self, report_data: String) -> Result<String> {
         let mut report_data_bin = base64::decode(report_data)?;
         if report_data_bin.len() != 48 {
