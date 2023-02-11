@@ -15,6 +15,7 @@ ctr = { version = "0.9.2", optional = true }
 foreign-types = { version = "0.5.0", optional = true }
 kbs-types = { git = "https://github.com/virtee/kbs-types" }
 log = "0.4.14"
+occlum_dcap = { git = "https://github.com/occlum/occlum", rev = "dbe404f", optional = true }
 openssl = { version = "0.10", features = ["vendored"], optional = true}
 prost = { version = "0.11.0", optional = true }
 rand = { version = "0.8.5", optional = true }
@@ -40,7 +41,7 @@ tonic-build = { version = "0.8.0", optional = true }
 [features]
 default = ["sample_kbc", "rust-crypto"]
 sample_kbc = []
-cc_kbc = ["rand", "rsa", "sha2", "tdx-attest-rs", "reqwest"]
+cc_kbc = ["rand", "rsa", "sha2", "tdx-attest-rs", "reqwest", "occlum_dcap"]
 eaa_kbc = ["foreign-types"]
 offline_fs_kbc = []
 offline_sev_kbc = []

@@ -6,18 +6,19 @@
 use anyhow::*;
 
 pub mod sample;
+pub mod sgx_occlum;
 pub mod tdx;
 
 /// The supported TEE types:
 /// - Tdx: TDX TEE.
-/// - Sgx: SGX TEE.
+/// - SgxOcclum: SGX TEE with Occlum Libos.
 /// - Sevsnp: SEV-SNP TEE.
 /// - Sample: A dummy TEE that used to test/demo the KBC functionalities.
 #[derive(Debug, EnumString, Display)]
 #[strum(ascii_case_insensitive, serialize_all = "lowercase")]
 pub enum Tee {
     Tdx,
-    Sgx,
+    SgxOcclum,
     Sevsnp,
     Sample,
     Unknown,
@@ -28,6 +29,7 @@ impl Tee {
         match self {
             Tee::Sample => Ok(Box::<sample::SampleAttester>::default()),
             Tee::Tdx => Ok(Box::<tdx::TdxAttester>::default()),
+            Tee::SgxOcclum => Ok(Box::<sgx_occlum::SgxOcclumAttester>::default()),
             _ => bail!("TEE is not supported!"),
         }
     }
@@ -43,6 +45,8 @@ pub fn detect_tee_type() -> Tee {
         Tee::Sample
     } else if tdx::detect_platform() {
         Tee::Tdx
+    } else if sgx_occlum::detect_platform() {
+        Tee::SgxOcclum
     } else {
         Tee::Unknown
     }

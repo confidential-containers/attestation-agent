@@ -16,7 +16,7 @@ use crate::kbc_modules::{KbcCheckInfo, KbcInstance, KbcModuleList};
 
 pub mod common;
 
-mod kbc_modules;
+pub mod kbc_modules;
 
 /// Attestation Agent (AA for short) is a rust library crate for attestation procedure
 /// in confidential containers. It provides kinds of service APIs that need to make

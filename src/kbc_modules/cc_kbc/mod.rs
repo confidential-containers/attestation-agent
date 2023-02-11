@@ -8,7 +8,7 @@ use crate::{
     kbc_modules::{KbcCheckInfo, KbcInterface, ResourceDescription},
 };
 
-mod attester;
+pub mod attester;
 mod crypto;
 mod kbs_protocol;
 
