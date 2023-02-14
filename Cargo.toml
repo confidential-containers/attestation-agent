@@ -51,3 +51,8 @@ gen-proto = ["tonic-build"]
 # Either `rust-crypto` or `openssl` should be enabled to work as underlying crypto module
 rust-crypto = ["dep:aes-gcm", "ctr"]
 openssl = ["dep:openssl"]
+
+# Examples are for single apps
+[[example]]
+name = "test_sgx_occlum_generate_quote"
+path = "examples/cc_kbc/attester/occlum_sgx/main.rs"
