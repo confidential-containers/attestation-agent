@@ -42,7 +42,7 @@ pub fn enc_optsdata_gen_anno(optsdata: &[u8], params: Vec<String>) -> Result<Str
         kid: kid.to_string(),
         wrapped_data: base64::encode(encrypt_optsdata),
         iv: base64::encode(nonce.to_vec()),
-        wrap_type: "A256GCM".to_string(),
+        wrap_type: "aes_256_gcm".to_string(),
     };
 
     serde_json::to_string(&annotation).map_err(|_| anyhow!("Serialize annotation failed"))
