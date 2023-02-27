@@ -23,7 +23,7 @@ jobs:
         rust:
           - stable
 
-    container: runetest/compilation-testing:ubuntu18.04
+    container: runetest/compilation-testing:ubuntu20.04
           
     steps:
       - name: Code checkout
@@ -40,10 +40,13 @@ jobs:
 
       - name: Build and install rats-tls
         run: | 
-          apt-get install -y libcurl4-openssl-dev
+          curl -L https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add -
+          echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main' | tee /etc/apt/sources.list.d/intel-sgx.list
+          apt-get update
+          apt install -y libsgx-dcap-ql-dev libcurl4-openssl-dev
           git clone https://github.com/inclavare-containers/rats-tls
           cd rats-tls
-          git reset --hard 5de6fc308f2a18f4105429451c85e6173b42ab9d
+          git reset --hard 2378719
           cmake -DBUILD_SAMPLES=on -H. -Bbuild
           make -C build install
       
