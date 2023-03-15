@@ -6,49 +6,29 @@
 use super::Attester;
 use anyhow::*;
 use serde::{Deserialize, Serialize};
-use sev::firmware::guest::types::AttestationReport;
-use sev::firmware::host::types::CertTableEntry;
-use tss_esapi::abstraction::nv;
-use tss_esapi::interface_types::resource_handles::NvAuth;
-use tss_esapi::interface_types::session_handles::AuthSession;
-use tss_esapi::tcti_ldr::{DeviceConfig, TctiNameConf};
-use tss_esapi::Context;
-
-const SNP_REPORT_SIZE: usize = std::mem::size_of::<AttestationReport>();
-const VTPM_NV_INDEX: u32 = 0x01400001;
-const VTPM_REPORT_OFFSET: usize = 32;
-
-fn get_attestation_report() -> anyhow::Result<AttestationReport> {
-    use tss_esapi::handles::NvIndexTpmHandle;
-    let nv_index = NvIndexTpmHandle::new(VTPM_NV_INDEX)?;
-
-    let conf: TctiNameConf = TctiNameConf::Device(DeviceConfig::default());
-    let mut context = Context::new(conf)?;
-    let auth_session = AuthSession::Password;
-    context.set_sessions((Some(auth_session), None, None));
-
-    let bytes = nv::read_full(&mut context, NvAuth::Owner, nv_index)?;
-    let report_bytes = bytes[VTPM_REPORT_OFFSET..(VTPM_REPORT_OFFSET + SNP_REPORT_SIZE)].to_vec();
-    let attestion_report: AttestationReport = bincode::deserialize(&report_bytes)?;
-    Ok(attestion_report)
-}
+use vtpm_snp::hcl::HclReportWithRuntimeData;
+use vtpm_snp::vtpm;
 
 pub fn detect_platform() -> bool {
-    let conf: TctiNameConf = TctiNameConf::Device(DeviceConfig::default());
-    Context::new(conf).map(|_| true).unwrap_or(false)
-}
-
-#[derive(Serialize, Deserialize)]
-struct SnpEvidence {
-    attestation_report: AttestationReport,
-    cert_chain: Vec<CertTableEntry>,
+    vtpm::has_tpm_device()
 }
 
 #[derive(Debug, Default)]
-pub struct VtpmAttester {}
+pub struct VtpmAttester;
+
+#[derive(Serialize, Deserialize)]
+struct VtpmSnpEvidence {
+    quote: vtpm::Quote,
+    hcl_report: HclReportWithRuntimeData,
+}
 
 impl Attester for VtpmAttester {
     fn get_evidence(&self, report_data: String) -> Result<String> {
-        todo!();
+        let hcl_report = vtpm::get_report()?;
+        let quote = vtpm::get_quote(&report_data.as_bytes())?;
+
+        let evidence = VtpmSnpEvidence { quote, hcl_report };
+
+        Ok(serde_json::to_string(&evidence)?)
     }
 }
