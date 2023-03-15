@@ -30,6 +30,8 @@ tonic = { version = "0.8.0", optional = true }
 url = "2.3.1"
 uuid = { version = "1.1.2", features = ["serde", "v4"], optional = true }
 zeroize = "1.5.7"
+tss-esapi = { version = "7.2", optional = true }
+sev = { version = "1.1", features = ["openssl"], optional = true }
 
 [dev-dependencies]
 tokio = { version = "1.20.1", features = ["macros", "rt-multi-thread"] }
@@ -42,8 +44,9 @@ tonic-build = { version = "0.8.0", optional = true }
 default = ["sample_kbc", "rust-crypto"]
 
 cc_kbc = ["rand", "rsa", "sha2", "reqwest"]
-all-attesters = ["tdx-attester"]
+all-attesters = ["tdx-attester", "sev-snp-vtpm-attester"]
 tdx-attester = ["tdx-attest-rs"]
+sev-snp-vtpm-attester = ["bincode", "sev", "tss-esapi"]
 
 sample_kbc = []
 eaa_kbc = ["foreign-types"]

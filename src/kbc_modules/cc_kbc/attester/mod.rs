@@ -10,6 +10,9 @@ pub mod sample;
 #[cfg(feature = "tdx-attester")]
 pub mod tdx;
 
+#[cfg(feature = "sev-snp-vtpm-attester")]
+pub mod sev_snp_vtpm;
+
 /// The supported TEE types:
 /// - Tdx: TDX TEE.
 /// - Sgx: SGX TEE.
@@ -21,6 +24,7 @@ pub enum Tee {
     Tdx,
     Sgx,
     Sevsnp,
+    SevSnpVtpm,
     Sample,
     Unknown,
 }
@@ -31,6 +35,8 @@ impl Tee {
             Tee::Sample => Ok(Box::<sample::SampleAttester>::default()),
             #[cfg(feature = "tdx-attester")]
             Tee::Tdx => Ok(Box::<tdx::TdxAttester>::default()),
+            #[cfg(feature = "sev-snp-vtpm-attester")]
+            Tee::SevSnpVtpm => Ok(Box::<sev_snp_vtpm::VtpmAttester>::default()),
             _ => bail!("TEE is not supported!"),
         }
     }
@@ -48,6 +54,10 @@ pub fn detect_tee_type() -> Tee {
     #[cfg(feature = "tdx-attester")]
     if tdx::detect_platform() {
         return Tee::Tdx;
+    }
+    #[cfg(feature = "sev-snp-vtpm-attester")]
+    if sev_snp_vtpm::detect_platform() {
+        return Tee::SevSnpVtpm;
     }
     Tee::Unknown
 }
