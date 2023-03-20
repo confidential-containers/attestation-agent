@@ -28,6 +28,7 @@ const KBS_REQ_TIMEOUT_SEC: u64 = 60;
 const KBS_GET_RESOURCE_MAX_ATTEMPT: u64 = 3;
 
 pub const KBS_URL_PREFIX: &str = "kbs/v0";
+pub const KBS_SCHEME: &str = "http://";
 
 pub struct Kbc {
     tee: String,
@@ -146,7 +147,7 @@ impl Kbc {
 
         let challenge = self
             .http_client()
-            .post(format!("{kbs_uri}/{KBS_URL_PREFIX}/auth"))
+            .post(format!("{KBS_SCHEME}{kbs_uri}/{KBS_URL_PREFIX}/auth"))
             .header("Content-Type", "application/json")
             .json(&Request::new(self.tee().to_string()))
             .send()
@@ -157,7 +158,7 @@ impl Kbc {
 
         let attest_response = self
             .http_client()
-            .post(format!("{kbs_uri}/{KBS_URL_PREFIX}/attest"))
+            .post(format!("{KBS_SCHEME}{kbs_uri}/{KBS_URL_PREFIX}/attest"))
             .header("Content-Type", "application/json")
             .json(&self.generate_evidence()?)
             .send()
@@ -231,7 +232,7 @@ impl Kbc {
         let r#type = &kid.r#type;
         let tag = &kid.tag;
         Ok(format!(
-            "http://{kbs_addr}/{KBS_URL_PREFIX}/resource/{repo}/{type}/{tag}"
+            "{KBS_SCHEME}{kbs_addr}/{KBS_URL_PREFIX}/resource/{repo}/{type}/{tag}"
         ))
     }
 }
