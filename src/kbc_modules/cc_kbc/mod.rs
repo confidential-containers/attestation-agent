@@ -182,8 +182,8 @@ impl Kbc {
     }
 
     async fn request_kbs_resource(&mut self, resource_url: String) -> Result<Response> {
-        for attempt in 1..=KBS_GET_RESOURCE_MAX_ATTEMPT {
-            log::info!("CC-KBC: trying to get resource, attempt {attempt}");
+        for attempt in 0..=KBS_GET_RESOURCE_MAX_ATTEMPT {
+            log::info!("CC-KBC: trying to get resource, attempt {}", attempt+1);
 
             if !self.authenticated {
                 self.establish_kbs_session().await?;
