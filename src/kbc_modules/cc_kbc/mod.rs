@@ -231,7 +231,7 @@ impl Kbc {
         let r#type = &kid.r#type;
         let tag = &kid.tag;
         Ok(format!(
-            "http://{kbs_addr}/{KBS_URL_PREFIX}/resource/{repo}/{type}/{tag}"
+            "{kbs_addr}/{KBS_URL_PREFIX}/resource/{repo}/{type}/{tag}"
         ))
     }
 }
