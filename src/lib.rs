@@ -156,7 +156,7 @@ impl AttestationAPIs for AttestationAgent {
         let resource_uri = ResourceUri::new(&kbs_socket, resource_path)?;
 
         if !self.kbc_instance_map.contains_key(kbc_name) {
-            self.instantiate_kbc(kbc_name, &resource_uri.kbs_addr)?;
+            self.instantiate_kbc(kbc_name, kbs_uri)?;
         }
 
         self.kbc_instance_map
@@ -164,5 +164,23 @@ impl AttestationAPIs for AttestationAgent {
             .ok_or_else(|| anyhow!("The KBC instance does not existing!"))?
             .get_resource(resource_uri)
             .await
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::uri::ResourceUri;
+
+    #[test]
+    fn aaa() {
+        let kbs_socket = url::Url::parse("http://localhost")
+            .unwrap()
+            .socket_addrs(|| Some(8080))
+            .unwrap()
+            .first()
+            .unwrap()
+            .to_string();
+        let resource_uri = ResourceUri::new(&kbs_socket, "/default/credential/test");
+        println!("{resource_uri:?}");
     }
 }
