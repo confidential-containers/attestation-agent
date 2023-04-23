@@ -9,7 +9,8 @@ members = [
     "deps/crypto",
     "deps/sev",
     "coco_keyprovider",
-    "test-binaries"
+    "test-binaries",
+    "deps/kms"
 ]
 
 [workspace.package]
