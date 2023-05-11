@@ -109,3 +109,40 @@ impl Default for SampleKms {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use rstest::rstest;
+
+    use crate::{plugins::sample::SampleKms, KMS};
+
+    #[rstest]
+    #[case(b"this is a test plaintext")]
+    #[case(b"this is a another test plaintext")]
+    #[tokio::test]
+    async fn key_lifetime(#[case] plaintext: &[u8]) {
+        let mut kms = SampleKms::default();
+        let keyid = kms.generate_key().await.expect("generate key");
+        let ciphertext = kms.encrypt(plaintext, &keyid).await.expect("encrypt");
+        let decrypted = kms.decrypt(&ciphertext, &keyid).await.expect("decrypt");
+        assert_eq!(decrypted, plaintext);
+    }
+
+    #[tokio::test]
+    async fn encrypt_with_an_non_existent_key() {
+        let mut kms = SampleKms::default();
+        let ciphertext = kms.encrypt(b"a test text", "an-non-existent-key-id").await;
+        assert!(ciphertext.is_err())
+    }
+
+    #[tokio::test]
+    async fn decrypt_with_an_non_existent_key() {
+        let mut kms = SampleKms::default();
+        let keyid = kms.generate_key().await.expect("generate key");
+        let ciphertext = kms.encrypt(b"a test text", &keyid).await.expect("encrypt");
+
+        // Use a fake key id to decrypt
+        let decrypted = kms.decrypt(&ciphertext, "an-non-existent-key-id").await;
+        assert!(decrypted.is_err())
+    }
+}
