@@ -36,10 +36,12 @@ impl TeeKey {
         })
     }
 
-    // Export TEE public key as specific structure.
+    // Export TEE public key as JWK, as defined in RFC 7517.
     pub fn export_pubkey(&self) -> Result<TeePubKey> {
-        let k_mod = base64::encode(self.public_key.n().to_bytes_be());
-        let k_exp = base64::encode(self.public_key.e().to_bytes_be());
+        let k_mod =
+            base64::encode_config(self.public_key.n().to_bytes_be(), base64::URL_SAFE_NO_PAD);
+        let k_exp =
+            base64::encode_config(self.public_key.e().to_bytes_be(), base64::URL_SAFE_NO_PAD);
 
         Ok(TeePubKey {
             alg: RSA_ALGORITHM.to_string(),
