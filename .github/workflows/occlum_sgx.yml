@@ -2,15 +2,15 @@ name: CC kbc build CI
 on:
   push:
     paths:
-      - 'attester/src/sgx_occlum'
+      - 'attester/src/sgx_dcap'
       - '.github/workflows/occlum_sgx.yml'
   pull_request:
     paths:
-      - 'attester/src/sgx_occlum'
+      - 'attester/src/sgx_dcap'
       - '.github/workflows/occlum_sgx.yml'
   create:
     paths:
-      - 'attester/src/sgx_occlum'
+      - 'attester/src/sgx_dcap'
       - '.github/workflows/occlum_sgx.yml'
 
 jobs:
