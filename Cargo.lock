@@ -203,6 +203,7 @@ dependencies = [
  "occlum_dcap",
  "serde",
  "serde_json",
+ "sev 1.1.0 (git+https://github.com/virtee/sev?rev=3dca05d2c93388cb00534ad18f5928fd812e99cc)",
  "strum",
  "tdx-attest-rs",
 ]
@@ -327,7 +328,7 @@ dependencies = [
  "rsa 0.8.2",
  "serde",
  "serde_json",
- "sev 1.1.0",
+ "sev 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sha2",
  "static_assertions",
  "thiserror",
@@ -3191,6 +3192,25 @@ name = "sev"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8c8ec2a5131be61bba9ffad92aead45bd27805c9701d265b7196d4914299b98"
+dependencies = [
+ "bincode",
+ "bitfield",
+ "bitflags",
+ "codicon",
+ "dirs",
+ "iocuddle",
+ "kvm-ioctls",
+ "serde",
+ "serde-big-array",
+ "serde_bytes",
+ "static_assertions",
+ "uuid",
+]
+
+[[package]]
+name = "sev"
+version = "1.1.0"
+source = "git+https://github.com/virtee/sev?rev=3dca05d2c93388cb00534ad18f5928fd812e99cc#3dca05d2c93388cb00534ad18f5928fd812e99cc"
 dependencies = [
  "bincode",
  "bitfield",
