@@ -9,10 +9,24 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 use tdx_attest_rs;
 
+mod az;
+
 const CCEL_PATH: &str = "/sys/firmware/acpi/tables/data/CCEL";
 
 pub fn detect_platform() -> bool {
-    Path::new("/dev/tdx-attest").exists() || Path::new("/dev/tdx-guest").exists()
+    // Upstream kernel exposes a /dev/tdx_guest device but Intel's lib expects
+    // /dev/tdx-guest
+    let paths = [
+        Path::new("/dev/tdx-attest"),
+        Path::new("/dev/tdx-guest"),
+        Path::new("/dev/tdx_guest"),
+    ];
+    for path in paths {
+        if path.exists() {
+            return true;
+        }
+    }
+    false
 }
 
 #[derive(Serialize, Deserialize)]
@@ -24,19 +38,32 @@ struct TdxEvidence {
     quote: String,
 }
 
+pub fn make_attester() -> Box<dyn Attester + Sync + Send> {
+    if az::detect_platform() {
+        Box::<az::TdxAttester>::default()
+    } else {
+        Box::<TdxAttester>::default()
+    }
+}
+
+fn convert_report_data(report_data: String) -> Result<Vec<u8>> {
+    let mut report_data_bin = base64::decode(report_data)?;
+    if report_data_bin.len() != 48 {
+        return Err(anyhow!(
+            "TDX Attester: Report data should be SHA384 base64 String"
+        ));
+    }
+    report_data_bin.extend([0; 16]);
+    Ok(report_data_bin)
+}
+
 #[derive(Debug, Default)]
 pub struct TdxAttester {}
 
 #[async_trait::async_trait]
 impl Attester for TdxAttester {
     async fn get_evidence(&self, report_data: String) -> Result<String> {
-        let mut report_data_bin = base64::decode(report_data)?;
-        if report_data_bin.len() != 48 {
-            return Err(anyhow!(
-                "TDX Attester: Report data should be SHA384 base64 String"
-            ));
-        }
-        report_data_bin.extend([0; 16]);
+        let report_data_bin = convert_report_data(report_data)?;
 
         let tdx_report_data = tdx_attest_rs::tdx_report_data_t {
             d: report_data_bin.as_slice().try_into()?,
