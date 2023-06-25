@@ -203,6 +203,7 @@ dependencies = [
  "occlum_dcap",
  "serde",
  "serde_json",
+ "sev 1.1.0 (git+https://github.com/virtee/sev?rev=3dca05d2c93388cb00534ad18f5928fd812e99cc)",
  "strum",
  "tdx-attest-rs",
 ]
@@ -327,7 +328,7 @@ dependencies = [
  "rsa 0.8.2",
  "serde",
  "serde_json",
- "sev 1.1.0",
+ "sev 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sha2",
  "static_assertions",
  "thiserror",
@@ -3207,6 +3208,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "sev"
+version = "1.1.0"
+source = "git+https://github.com/virtee/sev?rev=3dca05d2c93388cb00534ad18f5928fd812e99cc#3dca05d2c93388cb00534ad18f5928fd812e99cc"
+dependencies = [
+ "bincode",
+ "bitfield",
+ "bitflags",
+ "codicon",
+ "dirs",
+ "iocuddle",
+ "kvm-ioctls",
+ "serde",
+ "serde-big-array",
+ "serde_bytes",
+ "static_assertions",
+ "uuid",
+]
+
+[[package]]
 name = "sgx_types"
 version = "1.1.5"
 source = "git+https://github.com/occlum/occlum?rev=dbe404f#dbe404f16a2669df885d1ccf1d52f67de67219b8"
@@ -3416,8 +3436,8 @@ checksum = "fd1ba337640d60c3e96bc6f0638a939b9c9a7f2c316a1598c279828b3d1dc8c5"
 
 [[package]]
 name = "tdx-attest-rs"
-version = "0.1.0"
-source = "git+https://github.com/intel/SGXDataCenterAttestationPrimitives?rev=cc582e8be0c9010295c66fb58c59f74744017600#cc582e8be0c9010295c66fb58c59f74744017600"
+version = "0.1.2"
+source = "git+https://github.com/intel/SGXDataCenterAttestationPrimitives?tag=DCAP_1.16#71557c7d1d869b6bd6f95566c051cbd098549509"
 dependencies = [
  "tdx-attest-sys",
 ]
@@ -3425,7 +3445,7 @@ dependencies = [
 [[package]]
 name = "tdx-attest-sys"
 version = "0.1.0"
-source = "git+https://github.com/intel/SGXDataCenterAttestationPrimitives?rev=cc582e8be0c9010295c66fb58c59f74744017600#cc582e8be0c9010295c66fb58c59f74744017600"
+source = "git+https://github.com/intel/SGXDataCenterAttestationPrimitives?tag=DCAP_1.16#71557c7d1d869b6bd6f95566c051cbd098549509"
 dependencies = [
  "bindgen",
 ]
