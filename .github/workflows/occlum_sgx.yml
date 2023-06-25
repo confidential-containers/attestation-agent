@@ -1,4 +1,4 @@
-name: CC kbc build CI
+name: CC kbc build CI (Occlum)
 on:
   push:
     paths:
@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-and-run-occlum:
-    runs-on: self-hosted
+    runs-on: sgx-ecc
     container:
       image: occlum/occlum:latest-ubuntu20.04
       options: --device /dev/sgx_enclave --device /dev/sgx_provision
